@@ -1,39 +1,78 @@
+# Rename Files & Directories
+
+A Bash script utility designed to recursively rename files and directories in a given path to enforce clean, consistent naming conventions.
+
+## Features
+
+- **Recursive Renaming**: Searches the entire directory tree from the target root folder.
+- **Sorted Traversal**: Uses `sort -n -r` to ensure files and nested items are renamed before their parent directories, preventing paths from breaking mid-execution.
+- **File Renaming Rules**:
+  - Capitalizes the first letter of each word in the file name.
+  - Replaces spaces (` `) and underscores (`_`) with hyphens (`-`).
+- **Directory Renaming Rules**:
+  - Converts all characters to UPPERCASE.
+  - Replaces spaces (` `) and underscores (`_`) with hyphens (`-`).
+
+## How It Works
+
+The script is located at [rename.sh](file:///Users/carlossantiagocruz/iOS-Projects/rename-files/rename.sh).
+
+### 1. Renaming Files
+First, the script queries all files (`-type f`) under the target directory, sorts them in reverse name order, and processes each:
+- Converts the first letter of each word to uppercase using `awk`.
+- Replaces spaces and underscores with hyphens using `tr`.
+- Performs the rename (`mv`) if the new name differs from the original.
+
+### 2. Renaming Directories
+Next, the script queries all directories (`-type d`), sorts them in reverse order, and processes each:
+- Transforms the folder name to all uppercase.
+- Replaces spaces and underscores with hyphens.
+- Performs the rename (`mv`) if the new name differs from the original.
+
+## Installation
+
+You can install the tool globally so that it's accessible as the `rename-files` command from any directory on your system.
+
+An installation script [install.sh](file:///Users/carlossantiagocruz/iOS-Projects/rename-files/install.sh) is provided for this purpose. It creates a symbolic link to the actual script in `/usr/local/bin`.
+
+To install:
 ```bash
-# find .        find in current directory
-# -name "*"     find all file names
-# -type         of type
-# f             file
-# d             directory
-# |             pipe
-# sort -n -r    order files with option -n and -r
-# while read    while read all the parameters that comes from the last pipe
-
-# first rename files
-
-find . -name "*" -type f | sort -n -r | while read file_name; do
-  echo "First rename file"
-  echo "First letter capitalized ..."
-  first_letter_capitalized=$(echo ${file_name} | awk '{for (i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1')
-  echo "replace empty spaces and underscore with hyphen"
-  processed_file_name=$(echo ${first_letter_capitalized} | tr ' ' '-' | tr '_' '-')
-  
-  if [ "${processed_file_name}" = "${file_name}" ]; then
-    echo "${file_name} is a suitable name ... no changes"
-  else
-    mv "${file_name}" "${processed_file_name}"
-    echo "renaming file: ${file_name} to ${processed_file_name}"
-  fi
-done
-
-# second rename directories
-
-find . -name "*" -type d | sort -n -r | while read directory_name; do
-  processed_directory_name=$(echo ${directory_name} | tr ' ' '-' | tr '_' '-' | tr '[a-z]' '[A-Z]')
-  if [ "${processed_directory_name}" = "${directory_name}" ]; then
-    echo "directory: ${directory_name} is a suitable name ... no changes"
-  else
-    mv "${directory_name}" "${processed_directory_name}"
-    echo "renaming directory: ${directory_name} to ${processed_directory_name}"
-  fi
-done
+./install.sh
 ```
+
+*(Note: If write permission to `/usr/local/bin` is not present, the script will prompt for `sudo` to complete the action.)*
+
+## Usage
+
+> [!IMPORTANT]
+> This script must be run with administrator (root) privileges. If run directly, it will prompt you for your `sudo` password and restart itself with elevated privileges. The script invalidates cached `sudo` credentials on start to guarantee a password prompt is shown on every execution.
+
+If installed globally:
+```bash
+rename-files
+```
+
+If running locally:
+1. **Navigate to the target directory** (or place the script in the parent directory where you want to rename files).
+2. **Make the script executable** (if necessary):
+   ```bash
+   chmod +x rename.sh
+   ```
+3. **Run the script**:
+   ```bash
+   ./rename.sh
+   ```
+
+### Preview & Confirmation Steps
+
+To prevent accidental runs, the script features a preview stage followed by a double confirmation safety check:
+1. **Interactive Preview**: Before any changes are made, it displays a scrollable preview listing all the files that will be renamed (using `less` or `more` to allow scrolling and review). Press `q` to exit the preview.
+
+2. **Safety Warning**: Displays a warning regarding potential program/script reference breakage.
+3. **First Confirmation**: Prompts you to confirm proceeding (`yes` / `no`).
+4. **Second Confirmation**: Prompts you a second time to confirm the permanent, in-place nature of the renaming process (`yes` / `no`).
+
+
+> [!WARNING]
+> This script performs in-place renaming using the `mv` command. Make sure you have a backup of your directories or that your project is committed to version control (e.g., Git) before executing the script, as changes cannot be easily undone.
+
