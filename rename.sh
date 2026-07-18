@@ -1,5 +1,24 @@
 #!/bin/bash
 
+# Resolve the invoking user's actual home directory (handles running normally or via sudo)
+if [ -n "$SUDO_USER" ]; then
+  REAL_HOME=$(dscl . -read "/Users/$SUDO_USER" NFSHomeDirectory 2>/dev/null | awk '{print $2}')
+  if [ -z "$REAL_HOME" ]; then
+    REAL_HOME="/Users/$SUDO_USER"
+  fi
+else
+  REAL_HOME="$HOME"
+fi
+
+CWD=$(pwd)
+
+# Ensure the script is only run within the user's home directory or its subdirectories
+if [[ "${CWD}" != "${REAL_HOME}"* ]]; then
+  echo "Error: For safety, this script can only be executed within the user's home directory ($REAL_HOME) or its subdirectories."
+  echo "Current directory: ${CWD}"
+  exit 1
+fi
+
 # Enforce root/administrator execution
 if [ "$EUID" -ne 0 ]; then
   echo "This script must be run with administrator privileges."

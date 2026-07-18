@@ -15,7 +15,7 @@ A Bash script utility designed to recursively rename files and directories in a 
 
 ## How It Works
 
-The script is located at [rename.sh](file:///Users/carlossantiagocruz/iOS-Projects/rename-files/rename.sh).
+The script is located at [rename.sh](file:///Users/carlossantiagocruz/iOS-Projects/rename/rename.sh).
 
 ### 1. Renaming Files
 First, the script queries all files (`-type f`) under the target directory, sorts them in reverse name order, and processes each:
@@ -33,7 +33,7 @@ Next, the script queries all directories (`-type d`), sorts them in reverse orde
 
 You can install the tool globally so that it's accessible as the `rename-files` command from any directory on your system.
 
-An installation script [install.sh](file:///Users/carlossantiagocruz/iOS-Projects/rename-files/install.sh) is provided for this purpose. It creates a symbolic link to the actual script in `/usr/local/bin`.
+An installation script [install.sh](file:///Users/carlossantiagocruz/iOS-Projects/rename/install.sh) is provided for this purpose. It creates a symbolic link to the actual script in `/usr/local/bin`.
 
 To install:
 ```bash
@@ -45,7 +45,8 @@ To install:
 ## Usage
 
 > [!IMPORTANT]
-> This script must be run with administrator (root) privileges. If run directly, it will prompt you for your `sudo` password and restart itself with elevated privileges. The script invalidates cached `sudo` credentials on start to guarantee a password prompt is shown on every execution.
+> - **Execution Path Limitation**: For safety, this script can **only** be executed if the current working directory is inside your `$HOME` directory or its subdirectories. It will explicitly block runs in system directories (such as `/usr/local/bin`, `/etc`, etc.) to prevent accidental renaming of system files.
+> - **Administrator Privileges**: This script must be run with administrator (root) privileges. If run directly, it will prompt you for your `sudo` password and restart itself with elevated privileges. The script invalidates cached `sudo` credentials on start to guarantee a password prompt is shown on every execution.
 
 If installed globally:
 ```bash

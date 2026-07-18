@@ -3,7 +3,7 @@
 # Target script to link
 SCRIPT_NAME="rename.sh"
 INSTALL_DIR="/usr/local/bin"
-LINK_NAME="${INSTALL_DIR}/rename"
+LINK_NAME="${INSTALL_DIR}/rename-files"
 
 # Get absolute path of this install script's directory
 BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
