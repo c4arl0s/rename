@@ -3,7 +3,7 @@
 # Target script to link
 SCRIPT_NAME="rename.sh"
 INSTALL_DIR="/usr/local/bin"
-LINK_NAME="${INSTALL_DIR}/rename-files"
+LINK_NAME="${INSTALL_DIR}/rename"
 
 # Get absolute path of this install script's directory
 BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -31,7 +31,7 @@ else
 fi
 
 if [ $? -eq 0 ] && [ -L "${LINK_NAME}" ]; then
-  echo "Success! You can now run 'rename-files' from any directory."
+  echo "Success! You can now run 'rename' from any directory."
 else
   echo "Installation failed."
   exit 1

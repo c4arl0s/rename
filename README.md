@@ -31,7 +31,7 @@ Next, the script queries all directories (`-type d`), sorts them in reverse orde
 
 ## Installation
 
-You can install the tool globally so that it's accessible as the `rename-files` command from any directory on your system.
+You can install the tool globally so that it's accessible as the `rename` command from any directory on your system.
 
 An installation script [install.sh](file:///Users/carlossantiagocruz/iOS-Projects/rename/install.sh) is provided for this purpose. It creates a symbolic link to the actual script in `/usr/local/bin`.
 
@@ -50,7 +50,7 @@ To install:
 
 If installed globally:
 ```bash
-rename-files
+rename
 ```
 
 If running locally:
